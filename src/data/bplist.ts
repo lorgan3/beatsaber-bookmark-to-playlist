@@ -7,7 +7,11 @@ export interface BpList {
   playlistDescription: string;
   image: string;
   customData: Record<string, string>;
-  songs: Song[];
+  songs: Array<{
+    key: string;
+    hash: string;
+    songName: string;
+  }>;
 }
 
 export interface LoadingBpList {
@@ -35,7 +39,11 @@ export const createBpList = async (
     playlistDescription: `Playlist automatically generated from ${username}'s bookmarks on ${new Date().toDateString()}`,
     image: generateTextImage(title),
     customData: {},
-    songs,
+    songs: songs.map((song) => ({
+      songName: song.title,
+      key: song.songKey,
+      hash: song.hash,
+    })),
   };
 };
 
