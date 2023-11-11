@@ -53,5 +53,5 @@ export const fetchSongs = async ({ bookmarkedBy, amount }: Params) => {
     page++;
   }
 
-  return songs;
+  return songs.slice(0, amount);
 };
