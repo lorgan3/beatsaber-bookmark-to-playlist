@@ -50,7 +50,7 @@ export const generateTextImage = (text: string, color = "#3498db") => {
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.font = "30px Geist";
+  ctx.font = "42px Geist";
   ctx.textAlign = "center";
   ctx.textBaseline = "bottom";
 
