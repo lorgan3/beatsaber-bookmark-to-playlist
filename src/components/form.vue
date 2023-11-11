@@ -2,17 +2,29 @@
 import { fetchSongs } from "../data/bsaber";
 import { ref } from "vue";
 
-const username = ref<HTMLInputElement>();
-const playlistSize = ref(50);
+const USERNAME_KEY = "bsaber-username";
+const PLAYLIST_SIZE_KEY = "bsaber-playlist-size";
+
+const localStorageUsername = window.localStorage.getItem(USERNAME_KEY) || "";
+const localStoragePlaylistSize =
+  Number(window.localStorage.getItem(PLAYLIST_SIZE_KEY)) ?? 50;
+
+const username = ref(localStorageUsername);
+const playlistSize = ref(
+  isNaN(localStoragePlaylistSize) ? 50 : localStoragePlaylistSize
+);
 const customPlaylistSize = ref(false);
 
 const handleSearch = async () => {
   console.log(
     await fetchSongs({
-      bookmarkedBy: username.value!.value,
+      bookmarkedBy: username.value,
       amount: playlistSize.value,
     })
   );
+
+  window.localStorage.setItem(USERNAME_KEY, username.value);
+  window.localStorage.setItem(PLAYLIST_SIZE_KEY, playlistSize.value.toString());
 };
 </script>
 
@@ -22,9 +34,9 @@ const handleSearch = async () => {
       <h3>BeastSaber username</h3>
       <input
         name="username"
-        ref="username"
         type="text"
         placeholder="BeastSaber username"
+        v-model="username"
       />
     </div>
 
