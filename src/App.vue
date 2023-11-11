@@ -1,8 +1,18 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Form from "./components/form.vue";
+</script>
 
-<template>Hello world</template>
+<template>
+  <header class="header">
+    <a href="https://github.com/lorgan3/beatsaber-bookmark-to-playlist">
+      <h1>Beat Saber bookmark to playlist converter</h1>
+    </a>
+  </header>
 
-<style>
+  <Form />
+</template>
+
+<style lang="scss">
 @font-face {
   /* https://github.com/vercel/geist-font */
   font-family: Geist;
@@ -15,6 +25,24 @@
   font-family: Geist;
   font-size: 24px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.header {
+  background-color: #333;
+  padding: 30px 10px;
+  text-align: center;
+
+  a {
+    color: #fff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 button {
