@@ -4,6 +4,7 @@ import Loader from "./Loader.vue";
 import Playlist from "./Playlist.vue";
 import { LoadingBpList, createBpList, createTitle } from "../data/bplist";
 import { dispatchEvent } from "../data/bsaber";
+import { logEvent } from "../data/firebase";
 
 const USERNAME_KEY = "bsaber-username";
 const PLAYLIST_SIZE_KEY = "bsaber-playlist-size";
@@ -42,6 +43,7 @@ const handleSearch = async () => {
 
   window.localStorage.setItem(USERNAME_KEY, username.value);
   window.localStorage.setItem(PLAYLIST_SIZE_KEY, playlistSize.value.toString());
+  logEvent("generate_playlist", { username: username.value });
 };
 </script>
 
