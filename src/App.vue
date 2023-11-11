@@ -10,6 +10,20 @@ import Form from "./components/Form.vue";
   </header>
 
   <Form />
+
+  <section class="instructions">
+    <h3>Instructions</h3>
+    <p>
+      Use this tool to convert your bookmarks to a playlist. When done you can
+      click the thumbnail to download and use it like a normal playlist.
+    </p>
+    <p>
+      Copy the <pre>`bpList`</pre> file to
+      <pre>`ModData\com.beatgames.beatsaber\Mods\PlaylistManager\Playlists`</pre> on your quest, start
+      Beat Saber, go this playlist and click the "Download missing songs" button
+      on the right.
+    </p>
+  </section>
 </template>
 
 <style lang="scss">
@@ -45,9 +59,24 @@ import Form from "./components/Form.vue";
   }
 }
 
+.instructions {
+  max-width: 650px;
+  font-size: 0.7em;
+  padding: 0 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  align-self: center;
+
+  pre {
+    font-family: monospace;
+    display: inline;
+  }
+}
+
 button {
   font-family: Geist;
-  font-size: 24px;
+  font-size: 2em;
   color: #000;
 
   &:disabled {
@@ -158,7 +187,7 @@ table {
 
 /* */
 h3 {
-  font-size: 18px;
+  font-size: 1em;
   font-weight: bold;
 }
 </style>
