@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import Loader from "./Loader.vue";
 import Playlist from "./Playlist.vue";
-import { BpList, createBpList, createTitle } from "../data/bplist";
+import { LoadingBpList, createBpList, createTitle } from "../data/bplist";
 import { dispatchEvent } from "../data/bsaber";
 
 const USERNAME_KEY = "bsaber-username";
@@ -20,21 +20,24 @@ const playlistSize = ref(
 const customPlaylistSize = ref(
   !DEFAULT_PLAYLIST_SIZES.includes(playlistSize.value)
 );
-const creatingPlaylist = ref(false);
-const playlist = ref<BpList | null>(null);
+const playlists = ref<LoadingBpList[]>([]);
 
 const handleSearch = async () => {
-  creatingPlaylist.value = true;
-  const title = createTitle(username.value);
+  const reference: LoadingBpList = {
+    title: createTitle(username.value),
+    size: playlistSize.value,
+    playlist: null,
+  };
+  playlists.value.push(reference);
 
   createBpList(username.value, playlistSize.value || undefined)
     .then((bpList) => {
-      playlist.value = bpList;
-      creatingPlaylist.value = false;
+      reference.playlist = bpList;
+      playlists.value = [...playlists.value];
     })
     .catch((error) => {
       console.error(error);
-      dispatchEvent(title, []);
+      dispatchEvent(reference.title, []);
     });
 
   window.localStorage.setItem(USERNAME_KEY, username.value);
@@ -109,12 +112,16 @@ const handleSearch = async () => {
     </div>
 
     <button @click="handleSearch" :disabled="!username">Create playlist</button>
-    <Loader
-      v-if="creatingPlaylist"
-      :playlist-size="playlistSize"
-      :title="createTitle(username)"
-    />
-    <Playlist v-if="playlist" :playlist="playlist" />
+    <div class="playlists">
+      <template v-for="playlist in playlists">
+        <Loader
+          v-if="!playlist.playlist"
+          :playlist-size="playlist.size"
+          :title="playlist.title"
+        />
+        <Playlist v-if="playlist.playlist" :playlist="playlist.playlist" />
+      </template>
+    </div>
   </div>
 </template>
 
@@ -152,6 +159,13 @@ const handleSearch = async () => {
 
   .btn--selected {
     background-color: #0056b3;
+  }
+
+  .playlists {
+    display: flex;
+    gap: 1em;
+    flex-wrap: wrap;
+    padding: 0 2em;
   }
 }
 </style>

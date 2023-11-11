@@ -10,6 +10,12 @@ export interface BpList {
   songs: Song[];
 }
 
+export interface LoadingBpList {
+  title: string;
+  size: number;
+  playlist: BpList | null;
+}
+
 export const createTitle = (username: string) => `${username}'s bookmarks`;
 
 export const createBpList = async (
