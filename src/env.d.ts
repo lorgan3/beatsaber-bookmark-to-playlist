@@ -6,3 +6,9 @@ declare module "*.vue" {
   const component: DefineComponent<{}, {}, any>;
   export default component;
 }
+
+declare module "camelcase-keys-recursive" {
+  export default function camelcase(
+    obj: Record<string, unknown>
+  ): Record<string, unknown>;
+}

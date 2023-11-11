@@ -10,7 +10,7 @@
     "check-types": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "camelcase-keys": "^9.1.2",
+    "camelcase-keys-recursive": "^1.0.0",
     "firebase": "^10.6.0",
     "vue": "^3.3.8"
   },

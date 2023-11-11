@@ -1,4 +1,4 @@
-import camelcaseKeys from "camelcase-keys";
+import camelcase from "camelcase-keys-recursive";
 import { Song } from "./song";
 
 export interface Params {
@@ -40,7 +40,7 @@ export const fetchSongs = async ({ bookmarkedBy, amount }: Params) => {
       throw new Error("Failed to fetch bookmarks", { cause: error });
     }
 
-    const json = camelcaseKeys(await response.json()) as {
+    const json = camelcase(await response.json()) as {
       songs: Song[];
       nextPage: number | null;
     };
