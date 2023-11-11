@@ -3,6 +3,7 @@ import { ref } from "vue";
 import Loader from "./Loader.vue";
 import Playlist from "./Playlist.vue";
 import { BpList, createBpList } from "../data/bplist";
+import { SONG_UPDATE_EVENT } from "../data/bsaber";
 
 const USERNAME_KEY = "bsaber-username";
 const PLAYLIST_SIZE_KEY = "bsaber-playlist-size";
@@ -31,10 +32,8 @@ const handleSearch = async () => {
       creatingPlaylist.value = false;
     })
     .catch((error) => {
-      // @todo: some feedback for user
-
       console.error(error);
-      creatingPlaylist.value = false;
+      window.dispatchEvent(new CustomEvent(SONG_UPDATE_EVENT, { detail: [] }));
     });
 
   window.localStorage.setItem(USERNAME_KEY, username.value);

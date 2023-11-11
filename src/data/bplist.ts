@@ -17,6 +17,10 @@ export const createBpList = async (
   const title = `${username}'s bookmarks`;
   const songs = await fetchSongs({ bookmarkedBy: username, amount });
 
+  if (songs.length === 0) {
+    throw new Error("Empty playlist!");
+  }
+
   return {
     playlistTitle: title,
     playlistAuthor: "beatsaber-bookmark-to-playlist",

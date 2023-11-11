@@ -11,12 +11,18 @@ const { playlistSize, title } = defineProps<{
 
 const timeString = ref("00:00");
 const downloadedSongs = ref(0);
+const hasError = ref(false);
 const src = generateTextImage(title);
 
 let id = -1;
 
 const handleSongUpdate = (event: Event) => {
   const songs = (event as CustomEvent).detail as Song[];
+
+  if (songs.length === 0) {
+    hasError.value = true;
+    window.clearInterval(id);
+  }
 
   downloadedSongs.value = Math.min(
     playlistSize || Number.POSITIVE_INFINITY,
@@ -51,7 +57,7 @@ onUnmounted(() => {
 <template>
   <div class="loader">
     <img :src="src" />
-    <div class="text">
+    <div class="text" v-if="!hasError">
       <span>
         <h3>Building playlist</h3>
         <p>This might take a while</p>
@@ -62,6 +68,15 @@ onUnmounted(() => {
           >{{ downloadedSongs }} / {{ playlistSize || `??` }} songs</span
         >
       </div>
+    </div>
+    <div class="text" v-if="hasError">
+      <span>
+        <h3>Playlist error!</h3>
+        <p>
+          Creating the playlist didn't work. Make sure the username is correct
+          and try again later.
+        </p>
+      </span>
     </div>
   </div>
 </template>
