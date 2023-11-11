@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { fetchSongs } from "../data/bsaber";
 import { ref } from "vue";
+import Loader from "./Loader.vue";
+import Playlist from "./Playlist.vue";
+import { BpList, createBpList } from "../data/bplist";
 
 const USERNAME_KEY = "bsaber-username";
 const PLAYLIST_SIZE_KEY = "bsaber-playlist-size";
@@ -14,14 +16,23 @@ const playlistSize = ref(
   isNaN(localStoragePlaylistSize) ? 50 : localStoragePlaylistSize
 );
 const customPlaylistSize = ref(false);
+const creatingPlaylist = ref(false);
+const playlist = ref<BpList | null>(null);
 
 const handleSearch = async () => {
-  console.log(
-    await fetchSongs({
-      bookmarkedBy: username.value,
-      amount: playlistSize.value,
+  creatingPlaylist.value = true;
+
+  createBpList(username.value, playlistSize.value)
+    .then((bpList) => {
+      playlist.value = bpList;
+      creatingPlaylist.value = false;
     })
-  );
+    .catch((error) => {
+      // @todo: some feedback for user
+
+      console.error(error);
+      creatingPlaylist.value = false;
+    });
 
   window.localStorage.setItem(USERNAME_KEY, username.value);
   window.localStorage.setItem(PLAYLIST_SIZE_KEY, playlistSize.value.toString());
@@ -87,6 +98,12 @@ const handleSearch = async () => {
     </div>
 
     <button @click="handleSearch">Create playlist</button>
+    <Loader
+      v-if="creatingPlaylist"
+      :playlist-size="playlistSize"
+      :title="`${username}'s bookmarks`"
+    />
+    <Playlist v-if="playlist" :playlist="playlist" />
   </div>
 </template>
 

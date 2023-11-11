@@ -1,3 +1,4 @@
+import { fetchSongs } from "./bsaber";
 import { Song } from "./song";
 
 export interface BpList {
@@ -9,8 +10,13 @@ export interface BpList {
   songs: Song[];
 }
 
-export const createBpList = (username: string, songs: Song[]): BpList => {
+export const createBpList = async (
+  username: string,
+  amount?: number
+): Promise<BpList> => {
   const title = `${username}'s bookmarks`;
+  const songs = await fetchSongs({ bookmarkedBy: username, amount });
+
   return {
     playlistTitle: title,
     playlistAuthor: "beatsaber-bookmark-to-playlist",
