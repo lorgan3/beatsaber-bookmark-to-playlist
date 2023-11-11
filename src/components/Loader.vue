@@ -18,9 +18,12 @@ let id = -1;
 const handleSongUpdate = (event: Event) => {
   const songs = (event as CustomEvent).detail as Song[];
 
-  downloadedSongs.value = Math.min(playlistSize, songs.length);
+  downloadedSongs.value = Math.min(
+    playlistSize || Number.POSITIVE_INFINITY,
+    songs.length
+  );
 
-  if (songs.length >= playlistSize) {
+  if (playlistSize && songs.length >= playlistSize) {
     window.clearInterval(id);
   }
 };
