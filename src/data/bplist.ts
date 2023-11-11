@@ -48,7 +48,7 @@ export const generateTextImage = (text: string, color = "#3498db") => {
 
   ctx.font = "30px Geist";
   ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
+  ctx.textBaseline = "bottom";
 
   let y = 128;
   let height = 0;
