@@ -6,23 +6,26 @@ import { BpList, createBpList } from "../data/bplist";
 
 const USERNAME_KEY = "bsaber-username";
 const PLAYLIST_SIZE_KEY = "bsaber-playlist-size";
+const DEFAULT_PLAYLIST_SIZES = [0, 10, 25, 50, 100, 250];
 
 const localStorageUsername = window.localStorage.getItem(USERNAME_KEY) || "";
 const localStoragePlaylistSize =
-  Number(window.localStorage.getItem(PLAYLIST_SIZE_KEY)) ?? 50;
+  Number(window.localStorage.getItem(PLAYLIST_SIZE_KEY)) ?? 0;
 
 const username = ref(localStorageUsername);
 const playlistSize = ref(
-  isNaN(localStoragePlaylistSize) ? 50 : localStoragePlaylistSize
+  isNaN(localStoragePlaylistSize) ? 0 : localStoragePlaylistSize
 );
-const customPlaylistSize = ref(false);
+const customPlaylistSize = ref(
+  !DEFAULT_PLAYLIST_SIZES.includes(playlistSize.value)
+);
 const creatingPlaylist = ref(false);
 const playlist = ref<BpList | null>(null);
 
 const handleSearch = async () => {
   creatingPlaylist.value = true;
 
-  createBpList(username.value, playlistSize.value)
+  createBpList(username.value, playlistSize.value || undefined)
     .then((bpList) => {
       playlist.value = bpList;
       creatingPlaylist.value = false;
@@ -48,12 +51,19 @@ const handleSearch = async () => {
         type="text"
         placeholder="BeastSaber username"
         v-model="username"
+        autofocus
       />
     </div>
 
     <div>
       <h3>Playlist size</h3>
       <div class="playlist-size" v-if="!customPlaylistSize">
+        <button
+          :class="{ 'btn--selected': playlistSize === 0 }"
+          @click="() => (playlistSize = 0)"
+        >
+          All
+        </button>
         <button
           :class="{ 'btn--selected': playlistSize === 10 }"
           @click="() => (playlistSize = 10)"
@@ -93,11 +103,12 @@ const handleSearch = async () => {
           type="number"
           placeholder="Playlist size"
           :value="playlistSize"
+          autofocus
         />
       </div>
     </div>
 
-    <button @click="handleSearch">Create playlist</button>
+    <button @click="handleSearch" :disabled="!username">Create playlist</button>
     <Loader
       v-if="creatingPlaylist"
       :playlist-size="playlistSize"
