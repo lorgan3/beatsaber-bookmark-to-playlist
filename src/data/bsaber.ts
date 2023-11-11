@@ -6,6 +6,8 @@ export interface Params {
   amount?: number;
 }
 
+export const SONG_UPDATE_EVENT = "custom-song-update";
+
 const BSABER_API_URL = "https://bsaber.com/wp-json/bsaber-api/songs";
 const PROXY_URL = "https://corsproxy.io/";
 
@@ -46,6 +48,7 @@ export const fetchSongs = async ({ bookmarkedBy, amount }: Params) => {
     };
 
     songs.push(...json.songs);
+    window.dispatchEvent(new CustomEvent(SONG_UPDATE_EVENT, { detail: songs }));
 
     if (!json.nextPage) {
       break;
