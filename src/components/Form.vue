@@ -2,8 +2,8 @@
 import { ref } from "vue";
 import Loader from "./Loader.vue";
 import Playlist from "./Playlist.vue";
-import { BpList, createBpList } from "../data/bplist";
-import { SONG_UPDATE_EVENT } from "../data/bsaber";
+import { BpList, createBpList, createTitle } from "../data/bplist";
+import { dispatchEvent } from "../data/bsaber";
 
 const USERNAME_KEY = "bsaber-username";
 const PLAYLIST_SIZE_KEY = "bsaber-playlist-size";
@@ -25,6 +25,7 @@ const playlist = ref<BpList | null>(null);
 
 const handleSearch = async () => {
   creatingPlaylist.value = true;
+  const title = createTitle(username.value);
 
   createBpList(username.value, playlistSize.value || undefined)
     .then((bpList) => {
@@ -33,7 +34,7 @@ const handleSearch = async () => {
     })
     .catch((error) => {
       console.error(error);
-      window.dispatchEvent(new CustomEvent(SONG_UPDATE_EVENT, { detail: [] }));
+      dispatchEvent(title, []);
     });
 
   window.localStorage.setItem(USERNAME_KEY, username.value);
@@ -111,7 +112,7 @@ const handleSearch = async () => {
     <Loader
       v-if="creatingPlaylist"
       :playlist-size="playlistSize"
-      :title="`${username}'s bookmarks`"
+      :title="createTitle(username)"
     />
     <Playlist v-if="playlist" :playlist="playlist" />
   </div>

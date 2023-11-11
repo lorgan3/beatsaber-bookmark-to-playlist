@@ -17,7 +17,12 @@ const src = generateTextImage(title);
 let id = -1;
 
 const handleSongUpdate = (event: Event) => {
-  const songs = (event as CustomEvent).detail as Song[];
+  const eventTitle = (event as CustomEvent).detail.title as string;
+  const songs = (event as CustomEvent).detail.songs as Song[];
+
+  if (eventTitle !== title) {
+    return;
+  }
 
   if (songs.length === 0) {
     hasError.value = true;

@@ -4,6 +4,7 @@ import { Song } from "./song";
 export interface Params {
   bookmarkedBy: string;
   amount?: number;
+  title: string;
 }
 
 export const SONG_UPDATE_EVENT = "custom-song-update";
@@ -13,7 +14,7 @@ const PROXY_URL = "https://corsproxy.io/";
 
 const MAX_RETRIES = 3;
 
-export const fetchSongs = async ({ bookmarkedBy, amount }: Params) => {
+export const fetchSongs = async ({ bookmarkedBy, amount, title }: Params) => {
   const url = new URL(BSABER_API_URL);
   url.searchParams.set("bookmarked_by", bookmarkedBy);
 
@@ -48,7 +49,7 @@ export const fetchSongs = async ({ bookmarkedBy, amount }: Params) => {
     };
 
     songs.push(...json.songs);
-    window.dispatchEvent(new CustomEvent(SONG_UPDATE_EVENT, { detail: songs }));
+    dispatchEvent(title, songs);
 
     if (!json.nextPage) {
       break;
@@ -57,4 +58,15 @@ export const fetchSongs = async ({ bookmarkedBy, amount }: Params) => {
   }
 
   return songs.slice(0, amount);
+};
+
+export const dispatchEvent = (title: string, songs: Song[]) => {
+  window.dispatchEvent(
+    new CustomEvent(SONG_UPDATE_EVENT, {
+      detail: {
+        title,
+        songs,
+      },
+    })
+  );
 };

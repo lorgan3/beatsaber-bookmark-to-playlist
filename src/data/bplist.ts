@@ -10,12 +10,14 @@ export interface BpList {
   songs: Song[];
 }
 
+export const createTitle = (username: string) => `${username}'s bookmarks`;
+
 export const createBpList = async (
   username: string,
   amount?: number
 ): Promise<BpList> => {
-  const title = `${username}'s bookmarks`;
-  const songs = await fetchSongs({ bookmarkedBy: username, amount });
+  const title = createTitle(username);
+  const songs = await fetchSongs({ bookmarkedBy: username, amount, title });
 
   if (songs.length === 0) {
     throw new Error("Empty playlist!");
